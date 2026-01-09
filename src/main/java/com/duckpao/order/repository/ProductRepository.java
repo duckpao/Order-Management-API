@@ -1,0 +1,10 @@
+package com.duckpao.order.repository;
+
+import com.duckpao.order.entity.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductRepository extends JpaRepository<Product, Long> {
+
+    // Ví dụ mở rộng:
+    // List<Product> findByStatus(ProductStatus status);
+}
