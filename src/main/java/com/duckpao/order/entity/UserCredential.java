@@ -31,8 +31,8 @@ public class UserCredential {
     protected UserCredential() {
     }
 
-    public UserCredential(String username, String password) {
-
+    public UserCredential(User user,String username, String password) {
+        this.user = user;
         this.username = username;
         this.password = password;
     }

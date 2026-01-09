@@ -1,8 +1,10 @@
 package com.duckpao.order.controller;
-import com.duckpao.order.repository.UserRepository;
-import com.duckpao.order.entity.User;
-import org.springframework.web.bind.annotation.*;
 
+import com.duckpao.order.entity.User;
+import com.duckpao.order.repository.UserRepository;
+import org.springframework.web.bind.annotation.*;
+import com.duckpao.order.dto.request.CreateUserRequest;
+import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -13,16 +15,23 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    // 📌 GET /api/users/{id}
+    // ✅ POST /api/users
+    @PostMapping
+    public User createUser(@RequestBody CreateUserRequest request) {
+        User user = new User(request.getName(), request.getEmail());
+        return userRepository.save(user);
+    }
+
+    @GetMapping
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+    // ✅ GET /api/users/{id}
     @GetMapping("/{id}")
-    public User getById(@PathVariable Long id) {
+    public User getUser(@PathVariable Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    // 📌 POST /api/users
-    @PostMapping
-    public User create(@RequestBody User user) {
-        return userRepository.save(user);
-    }
+
 }
