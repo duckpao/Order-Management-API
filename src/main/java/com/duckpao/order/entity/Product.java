@@ -51,6 +51,12 @@ public class Product {
         this.status = status;
     }
 
+    public Product(String name, BigDecimal price, Integer stock) {
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
+    }
+
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
@@ -113,6 +119,13 @@ public class Product {
             throw new IllegalStateException("Product out of stock");
         }
         this.stock -= quantity;
+    }
+    // ===== Business method =====
+    public void updateStock(int stock) {
+        if (stock < 0) {
+            throw new IllegalArgumentException("Stock cannot be negative");
+        }
+        this.stock = stock;
     }
 
 }

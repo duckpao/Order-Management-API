@@ -1,41 +1,41 @@
 package com.duckpao.order.controller;
-import com.duckpao.order.repository.ProductRepository;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
+
+import com.duckpao.order.dto.request.CreateProductRequest;
+import com.duckpao.order.dto.request.UpdateStockRequest;
 import com.duckpao.order.entity.Product;
+import com.duckpao.order.service.ProductService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
 
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
-    public ProductController(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
-    // 📌 GET /api/products
-    @GetMapping
-    public List<Product> getAll() {
-        return productRepository.findAll();
-    }
-
-    // 📌 POST /api/products
+    // ✅ POST /api/products
     @PostMapping
-    public Product create(@RequestBody Product product) {
-        return productRepository.save(product);
+    public Product createProduct(@RequestBody CreateProductRequest request) {
+        return productService.create(request);
     }
 
-    // 📌 PUT /api/products/{id}/stock
+    // ✅ GET /api/products
+    @GetMapping
+    public List<Product> getProducts() {
+        return productService.getAll();
+    }
+
+    // ✅ PUT /api/products/{id}/stock
     @PutMapping("/{id}/stock")
     public Product updateStock(
             @PathVariable Long id,
-            @RequestParam int quantity
+            @RequestBody UpdateStockRequest request
     ) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-
-        product.decreaseStock(quantity);
-        return productRepository.save(product);
+        return productService.updateStock(id, request);
     }
 }
