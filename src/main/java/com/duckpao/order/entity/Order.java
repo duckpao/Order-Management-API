@@ -1,13 +1,10 @@
 package com.duckpao.order.entity;
 
-
 import com.duckpao.order.common.OrderStatus;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -17,19 +14,13 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // User 1 -> N Order
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(
-            mappedBy = "order",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<OrderItem> items = new ArrayList<>();
-
     @Column(name = "total_amount", nullable = false)
-    private BigDecimal totalAmount = BigDecimal.ZERO;
+    private BigDecimal totalAmount;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -44,21 +35,10 @@ public class Order {
     protected Order() {
     }
 
-    public Order(User user) {
+    public Order(User user, BigDecimal totalAmount, OrderStatus status) {
         this.user = user;
-        this.status = OrderStatus.NEW;
-    }
-
-    // ===== Business methods =====
-    public void addItem(Product product, int quantity) {
-        OrderItem item = new OrderItem(this, product, quantity, product.getPrice());
-        items.add(item);
-    }
-
-    public void calculateTotalAmount() {
-        this.totalAmount = items.stream()
-                .map(OrderItem::getSubTotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        this.totalAmount = totalAmount;
+        this.status = status;
     }
 
     @PrePersist
@@ -67,6 +47,9 @@ public class Order {
         if (this.status == null) {
             this.status = OrderStatus.NEW;
         }
+        if (this.totalAmount == null) {
+            this.totalAmount = BigDecimal.ZERO;
+        }
     }
 
     @PreUpdate
@@ -74,5 +57,39 @@ public class Order {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // getters (không setter bừa bãi)
+    // ===== Getters =====
+
+    public Long getId() {
+        return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    // ===== Business setters (chỉ mở những gì cần thiết) =====
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
 }
