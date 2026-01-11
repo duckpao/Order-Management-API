@@ -1,8 +1,9 @@
 package com.duckpao.order.service;
 
-import com.duckpao.order.common.OrderStatus;
+import com.duckpao.order.common.*;
 import com.duckpao.order.dto.request.CreateOrderRequest;
 import com.duckpao.order.entity.*;
+import com.duckpao.order.exception.BusinessException;
 import com.duckpao.order.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -30,39 +31,59 @@ public class OrderService {
 
     public Order createOrder(CreateOrderRequest request) {
 
+        // ===== Logic 1: Kiểm tra User =====
         User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new BusinessException("User not found"));
 
+        if (user.getStatus() != UserStatus.ACTIVE) {
+            throw new BusinessException("User is blocked");
+        }
+
+        // Tạo order trước (chưa có total)
         Order order = new Order(user, BigDecimal.ZERO, OrderStatus.NEW);
         orderRepository.save(order);
 
-        BigDecimal total = BigDecimal.ZERO;
+        BigDecimal totalAmount = BigDecimal.ZERO;
 
+        // ===== Logic 2 + 3 + 4 =====
         for (CreateOrderRequest.OrderItemRequest item : request.getItems()) {
-            Product product = productRepository.findById(item.getProductId())
-                    .orElseThrow(() -> new RuntimeException("Product not found"));
 
-            if (product.getStock() < item.getQuantity()) {
-                throw new RuntimeException("Not enough stock for product " + product.getName());
+            Product product = productRepository.findById(item.getProductId())
+                    .orElseThrow(() -> new BusinessException("Product not found"));
+
+            // Product phải ACTIVE
+            if (product.getStatus() != ProductStatus.ACTIVE) {
+                throw new BusinessException("Product is not active: " + product.getName());
             }
 
-            product.decreaseStock(item.getQuantity());
+            // Stock phải đủ
+            if (product.getStock() < item.getQuantity()) {
+                throw new BusinessException("Not enough stock for product: " + product.getName());
+            }
 
+            // Lấy giá tại thời điểm mua
+            BigDecimal priceAtPurchase = product.getPrice();
             BigDecimal itemTotal =
-                    product.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
-            total = total.add(itemTotal);
+                    priceAtPurchase.multiply(BigDecimal.valueOf(item.getQuantity()));
 
+            totalAmount = totalAmount.add(itemTotal);
+
+            // Tạo OrderItem
             OrderItem orderItem = new OrderItem(
                     order,
                     product,
                     item.getQuantity(),
-                    product.getPrice()
+                    priceAtPurchase
             );
-
             orderItemRepository.save(orderItem);
+
+            // Trừ kho
+            product.decreaseStock(item.getQuantity());
         }
 
-        order.setTotalAmount(total);
+        // ===== Logic 3: Set tổng tiền =====
+        order.setTotalAmount(totalAmount);
+
         return order;
     }
 }
