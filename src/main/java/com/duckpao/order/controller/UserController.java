@@ -1,6 +1,7 @@
 package com.duckpao.order.controller;
 
 import com.duckpao.order.entity.User;
+import com.duckpao.order.exception.BusinessException;
 import com.duckpao.order.repository.UserRepository;
 import org.springframework.web.bind.annotation.*;
 import com.duckpao.order.dto.request.CreateUserRequest;
@@ -30,7 +31,7 @@ public class UserController {
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new BusinessException("User not found"));
     }
 
 

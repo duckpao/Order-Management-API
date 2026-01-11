@@ -31,7 +31,7 @@ public class OrderService {
 
     public Order createOrder(CreateOrderRequest request) {
 
-        // ===== Logic 1: Kiểm tra User =====
+
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new BusinessException("User not found"));
 
@@ -39,13 +39,13 @@ public class OrderService {
             throw new BusinessException("User is blocked");
         }
 
-        // Tạo order trước (chưa có total)
+
         Order order = new Order(user, BigDecimal.ZERO, OrderStatus.NEW);
         orderRepository.save(order);
 
         BigDecimal totalAmount = BigDecimal.ZERO;
 
-        // ===== Logic 2 + 3 + 4 =====
+
         for (CreateOrderRequest.OrderItemRequest item : request.getItems()) {
 
             Product product = productRepository.findById(item.getProductId())

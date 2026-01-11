@@ -5,6 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    // Ví dụ mở rộng:
-    // List<Product> findByStatus(ProductStatus status);
+
 }
