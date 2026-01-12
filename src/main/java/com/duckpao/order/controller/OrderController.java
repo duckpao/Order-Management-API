@@ -5,6 +5,8 @@ import com.duckpao.order.model.Order;
 import com.duckpao.order.service.OrderService;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
+
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
@@ -18,5 +20,10 @@ public class OrderController {
     @PostMapping
     public Order createOrder(@RequestBody CreateOrderRequest request) {
         return orderService.createOrder(request);
+    }
+
+    @GetMapping
+    public List<Order> getAllOrders() {
+
     }
 }

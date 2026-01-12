@@ -1,40 +1,46 @@
 package com.duckpao.order.controller;
 
 import com.duckpao.order.adapter.UserAdapter;
+import com.duckpao.order.dto.request.CreateUserRequest;
+import com.duckpao.order.dto.response.UserResponse;
 import com.duckpao.order.model.User;
-import com.duckpao.order.exception.BusinessException;
-import com.duckpao.order.repository.UserRepository;
 import com.duckpao.order.service.UserService;
 import org.springframework.web.bind.annotation.*;
-import com.duckpao.order.dto.request.CreateUserRequest;
+
 import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-private UserService userService;
 
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    // Inject đúng Service
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     // ✅ POST /api/users
     @PostMapping
-    public User createUser(@RequestBody CreateUserRequest request) {
+    public UserResponse createUser(@RequestBody CreateUserRequest request) {
         User user = userService.create(request);
         return UserAdapter.toResponse(user);
     }
 
+    // ✅ GET /api/users
     @GetMapping
-    public List<User> getAllUsers() {
-        return UserService.getAllUser();
+    public List<UserResponse> getAllUsers() {
+        return userService.getAllUsers()
+                .stream()
+                .map(UserAdapter::toResponse)
+                .collect(Collectors.toList());
     }
+
     // ✅ GET /api/users/{id}
     @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("User not found"));
+    public UserResponse getUser(@PathVariable Long id) {
+        User user = userService.getById(id);
+        return UserAdapter.toResponse(user);
     }
-
-
 }
