@@ -1,9 +1,15 @@
-package com.duckpao.order.entity;
+package com.duckpao.order.model;
 
 import com.duckpao.order.common.UserStatus;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.*;
 
+import java.time.LocalDateTime;
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
@@ -25,34 +31,12 @@ public class User {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    protected User() {
-    }
 
-    public User(String name, String email) {
-        this.name = name;
-        this.email = email;
-        this.status = UserStatus.ACTIVE;
-    }
 
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
     }
 
-    // ===== getters =====
-    public Long getId() {
-        return id;
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public UserStatus getStatus() {
-        return status;
-    }
 }

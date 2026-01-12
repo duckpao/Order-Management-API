@@ -1,7 +1,9 @@
 package com.duckpao.order.dto.request;
 
-import java.util.List;
+import lombok.Getter;
 
+import java.util.List;
+@Getter
 public class CreateOrderRequest {
 
     private Long userId;
@@ -15,16 +17,5 @@ public class CreateOrderRequest {
         return items;
     }
 
-    public static class OrderItemRequest {
-        private Long productId;
-        private Integer quantity;
 
-        public Long getProductId() {
-            return productId;
-        }
-
-        public Integer getQuantity() {
-            return quantity;
-        }
-    }
 }

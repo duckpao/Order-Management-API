@@ -1,8 +1,15 @@
-package com.duckpao.order.entity;
+package com.duckpao.order.model;
 
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.math.BigDecimal;
 
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @Entity
 @Table(name = "order_item")
 public class OrderItem {
@@ -25,12 +32,7 @@ public class OrderItem {
     @Column(nullable = false)
     private BigDecimal price;
 
-    protected OrderItem() {}
 
-    public OrderItem(Order order, Product product, Integer quantity, BigDecimal price) {
-        this.order = order;
-        this.product = product;
-        this.quantity = quantity;
-        this.price = price;
-    }
+
+
 }

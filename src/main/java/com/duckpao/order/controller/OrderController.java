@@ -1,7 +1,7 @@
 package com.duckpao.order.controller;
 
 import com.duckpao.order.dto.request.CreateOrderRequest;
-import com.duckpao.order.entity.Order;
+import com.duckpao.order.model.Order;
 import com.duckpao.order.service.OrderService;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,15 +1,12 @@
 package com.duckpao.order.dto.request;
 
+import lombok.Getter;
+
+@Getter
 public class CreateUserRequest {
 
     private String name;
     private String email;
 
-    public String getName() {
-        return name;
-    }
 
-    public String getEmail() {
-        return email;
-    }
 }

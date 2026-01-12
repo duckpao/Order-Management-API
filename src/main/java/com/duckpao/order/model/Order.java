@@ -1,11 +1,15 @@
-package com.duckpao.order.entity;
+package com.duckpao.order.model;
 
 import com.duckpao.order.common.OrderStatus;
 import jakarta.persistence.*;
-
+import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -32,8 +36,7 @@ public class Order {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    protected Order() {
-    }
+
 
     public Order(User user, BigDecimal totalAmount, OrderStatus status) {
         this.user = user;
@@ -57,39 +60,7 @@ public class Order {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // ===== Getters =====
 
-    public Long getId() {
-        return id;
-    }
 
-    public User getUser() {
-        return user;
-    }
 
-    public BigDecimal getTotalAmount() {
-        return totalAmount;
-    }
-
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    // ===== Business setters (chỉ mở những gì cần thiết) =====
-
-    public void setTotalAmount(BigDecimal totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
 }

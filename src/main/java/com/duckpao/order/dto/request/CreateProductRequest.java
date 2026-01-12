@@ -1,14 +1,12 @@
 package com.duckpao.order.dto.request;
 
+import lombok.Getter;
+
 import java.math.BigDecimal;
 
+@Getter
 public class CreateProductRequest {
-
     private String name;
     private BigDecimal price;
     private Integer stock;
-
-    public String getName() { return name; }
-    public BigDecimal getPrice() { return price; }
-    public Integer getStock() { return stock; }
 }

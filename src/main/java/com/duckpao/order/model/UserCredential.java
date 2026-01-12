@@ -1,10 +1,16 @@
-package com.duckpao.order.entity;
+package com.duckpao.order.model;
 
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "user_credential")
 public class UserCredential {
@@ -27,15 +33,6 @@ public class UserCredential {
 
     @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt;
-
-    protected UserCredential() {
-    }
-
-    public UserCredential(User user,String username, String password) {
-        this.user = user;
-        this.username = username;
-        this.password = password;
-    }
 
 
 }

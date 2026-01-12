@@ -1,16 +1,18 @@
 package com.duckpao.order.controller;
 
-import com.duckpao.order.entity.User;
+import com.duckpao.order.adapter.UserAdapter;
+import com.duckpao.order.model.User;
 import com.duckpao.order.exception.BusinessException;
 import com.duckpao.order.repository.UserRepository;
+import com.duckpao.order.service.UserService;
 import org.springframework.web.bind.annotation.*;
 import com.duckpao.order.dto.request.CreateUserRequest;
 import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+private UserService userService;
 
-    private final UserRepository userRepository;
 
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -19,13 +21,13 @@ public class UserController {
     // ✅ POST /api/users
     @PostMapping
     public User createUser(@RequestBody CreateUserRequest request) {
-        User user = new User(request.getName(), request.getEmail());
-        return userRepository.save(user);
+        User user = userService.create(request);
+        return UserAdapter.toResponse(user);
     }
 
     @GetMapping
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return UserService.getAllUser();
     }
     // ✅ GET /api/users/{id}
     @GetMapping("/{id}")
