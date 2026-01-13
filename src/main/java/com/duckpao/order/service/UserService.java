@@ -1,7 +1,13 @@
 package com.duckpao.order.service;
 
 
+import com.duckpao.order.adapter.ProductAdapter;
+import com.duckpao.order.adapter.UserAdapter;
+import com.duckpao.order.dto.request.CreateProductRequest;
 import com.duckpao.order.dto.request.CreateUserRequest;
+import com.duckpao.order.dto.response.ProductResponse;
+import com.duckpao.order.dto.response.UserResponse;
+import com.duckpao.order.model.Product;
 import com.duckpao.order.repository.UserRepository;
 import com.duckpao.order.model.User;
 import jakarta.transaction.Transactional;
@@ -19,12 +25,17 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User create(CreateUserRequest request) {
-        User user =  User.builder()
-                .name(request.getName())
-                .email(request.getEmail()).build();
-        return userRepository.save(user);
+    public UserResponse create(CreateUserRequest request) {
+      User user = UserAdapter.toModel(request);
+      User savedUser = userRepository.save(user);
+        return UserAdapter.toResponse(savedUser);
     }
+//    public ProductResponse create(CreateProductRequest request) {
+//        Product product = ProductAdapter.toModel(request);
+//        Product saved = productRepository.save(product);
+//        return ProductAdapter.toResponse(saved);
+//    }
+
 
     public List<User> getAllUsers() {
         return userRepository.findAll();

@@ -1,11 +1,14 @@
 package com.duckpao.order.controller;
 
 import com.duckpao.order.dto.request.CreateOrderRequest;
+import com.duckpao.order.dto.response.OrderResponse;
 import com.duckpao.order.model.Order;
 import com.duckpao.order.service.OrderService;
+import com.duckpao.order.adapter.OrderAdapter;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -23,7 +26,11 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<Order> getAllOrders() {
-
+    public List<OrderResponse> getAllOrders() {
+     return   orderService.getAllOrders()
+                .stream()
+                .map(OrderAdapter::toResponse)
+                .collect(Collectors.toList());
     }
+
 }

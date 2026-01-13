@@ -16,7 +16,7 @@ public class UserController {
 
     private final UserService userService;
 
-    // Inject đúng Service
+
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -24,8 +24,7 @@ public class UserController {
     // ✅ POST /api/users
     @PostMapping
     public UserResponse createUser(@RequestBody CreateUserRequest request) {
-        User user = userService.create(request);
-        return UserAdapter.toResponse(user);
+      return userService.create(request);
     }
 
     // ✅ GET /api/users

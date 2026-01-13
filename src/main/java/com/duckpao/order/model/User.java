@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Builder
@@ -30,7 +31,6 @@ public class User {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-
 
 
     @PrePersist

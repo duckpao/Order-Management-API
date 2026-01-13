@@ -9,6 +9,7 @@ import com.duckpao.order.exception.*;
 import com.duckpao.order.dto.request.OrderItemRequest;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @Transactional
@@ -16,7 +17,7 @@ public class OrderService {
 
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
-    private final OrderRepository orderRepository;
+    private final  OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
 
     public OrderService(UserRepository userRepository,
@@ -126,6 +127,10 @@ public class OrderService {
                     "Not enough stock for product: " + product.getName()
             );
         }
+    }
+
+    public  List<Order> getAllOrders() {
+        return orderRepository.findAll();
     }
 
 }
