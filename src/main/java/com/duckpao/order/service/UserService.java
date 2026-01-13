@@ -1,41 +1,30 @@
 package com.duckpao.order.service;
 
-
-import com.duckpao.order.adapter.ProductAdapter;
 import com.duckpao.order.adapter.UserAdapter;
-import com.duckpao.order.dto.request.CreateProductRequest;
 import com.duckpao.order.dto.request.CreateUserRequest;
-import com.duckpao.order.dto.response.ProductResponse;
 import com.duckpao.order.dto.response.UserResponse;
-import com.duckpao.order.model.Product;
 import com.duckpao.order.repository.UserRepository;
 import com.duckpao.order.model.User;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import com.duckpao.order.exception.BusinessException;
 
+import java.util.List;
+
+import com.duckpao.order.exception.BusinessException;
+@RequiredArgsConstructor
 @Service
 @Transactional
 public class UserService {
 
     private final UserRepository userRepository;
-
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UserAdapter userAdapter;
 
     public UserResponse create(CreateUserRequest request) {
-      User user = UserAdapter.toModel(request);
-      User savedUser = userRepository.save(user);
-        return UserAdapter.toResponse(savedUser);
+        User user = userAdapter.toModel(request);
+        User savedUser = userRepository.save(user);
+        return userAdapter.toResponse(savedUser);
     }
-//    public ProductResponse create(CreateProductRequest request) {
-//        Product product = ProductAdapter.toModel(request);
-//        Product saved = productRepository.save(product);
-//        return ProductAdapter.toResponse(saved);
-//    }
-
 
     public List<User> getAllUsers() {
         return userRepository.findAll();

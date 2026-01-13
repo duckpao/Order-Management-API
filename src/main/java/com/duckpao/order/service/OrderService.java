@@ -1,16 +1,18 @@
 package com.duckpao.order.service;
+import com.duckpao.order.adapter.OrderAdapter;
 import com.duckpao.order.dto.request.CreateOrderRequest;
+import com.duckpao.order.dto.response.OrderResponse;
 import com.duckpao.order.model.*;
 import com.duckpao.order.repository.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.duckpao.order.common.*;
 import com.duckpao.order.exception.*;
 import com.duckpao.order.dto.request.OrderItemRequest;
-
 import java.math.BigDecimal;
 import java.util.List;
-
+@RequiredArgsConstructor
 @Service
 @Transactional
 public class OrderService {
@@ -19,29 +21,19 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final  OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final OrderAdapter orderAdapter;
 
-    public OrderService(UserRepository userRepository,
-                        ProductRepository productRepository,
-                        OrderRepository orderRepository,
-                        OrderItemRepository orderItemRepository) {
-        this.userRepository = userRepository;
-        this.productRepository = productRepository;
-        this.orderRepository = orderRepository;
-        this.orderItemRepository = orderItemRepository;
-    }
 
-    public Order createOrder(CreateOrderRequest request) {
 
+    public OrderResponse createOrder(CreateOrderRequest request) {
         User user = validateUser(request.getUserId());
-
         Order order = createEmptyOrder(user);
-
         BigDecimal totalAmount = processOrderItems(order, request);
-
         order.setTotalAmount(totalAmount);
-
-        return order;
+        orderRepository.save(order);
+        return orderAdapter.toResponse(order);
     }
+
 
     // ================= LOGIC 1 =================
     private User validateUser(Long userId) {
@@ -56,22 +48,17 @@ public class OrderService {
 
     // ================= LOGIC 2 =================
     private Order createEmptyOrder(User user) {
-        Order order = new Order(user, BigDecimal.ZERO, OrderStatus.NEW);
+        Order order = orderAdapter.toModel(user);
         return orderRepository.save(order);
     }
 
     // ================= LOGIC 3 + 4 =================
     private BigDecimal processOrderItems(Order order, CreateOrderRequest request) {
-
         BigDecimal totalAmount = BigDecimal.ZERO;
-
         for (OrderItemRequest item : request.getItems()) {
-
             Product product = validateProduct(item);
-
             BigDecimal itemTotal = calculateItemTotal(product, item.getQuantity());
             totalAmount = totalAmount.add(itemTotal);
-
             saveOrderItem(order, product, item, product.getPrice());
 
             decreaseProductStock(product, item.getQuantity());
@@ -82,18 +69,14 @@ public class OrderService {
 
     // ================= PRODUCT VALIDATION =================
     private Product validateProduct(OrderItemRequest item) {
-
         Product product = productRepository.findById(item.getProductId())
                 .orElseThrow(() -> new BusinessException("Product not found"));
-
         if (product.getStatus() != ProductStatus.ACTIVE) {
             throw new BusinessException("Product is not active: " + product.getName());
         }
-
         if (product.getStock() < item.getQuantity()) {
             throw new BusinessException("Not enough stock for product: " + product.getName());
         }
-
         return product;
     }
 

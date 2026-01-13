@@ -10,32 +10,24 @@ import com.duckpao.order.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductAdapter productAdapter;
 
     // CREATE
     public ProductResponse create(CreateProductRequest request) {
-        Product product = ProductAdapter.toModel(request);
+        Product product = productAdapter.toModel(request);
         Product saved = productRepository.save(product);
-        return ProductAdapter.toResponse(saved);
+        return productAdapter.toResponse(saved);
     }
 
     // GET ALL
-    public List<ProductResponse> getAll() {
-        return productRepository.findAll()
-                .stream()
-                .map(ProductAdapter::toResponse)
-                .collect(Collectors.toList());
-    }
-
+  public List<Product> getProducts() {return productRepository.findAll();}
     // UPDATE STOCK
     public ProductResponse updateStock(Long id, UpdateStockRequest request) {
         Product product = productRepository.findById(id)
@@ -52,6 +44,6 @@ public class ProductService {
 
         product.setStock(request.getStock());
 
-        return ProductAdapter.toResponse(product);
+        return productAdapter.toResponse(product);
     }
 }

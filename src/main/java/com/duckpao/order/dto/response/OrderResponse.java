@@ -1,8 +1,5 @@
 package com.duckpao.order.dto.response;
 
-import com.duckpao.order.common.OrderStatus;
-import com.duckpao.order.model.User;
-import lombok.AccessLevel;
 import lombok.*;
 
 import java.math.BigDecimal;

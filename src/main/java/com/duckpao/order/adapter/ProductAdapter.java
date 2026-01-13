@@ -4,11 +4,13 @@ import com.duckpao.order.common.ProductStatus;
 import com.duckpao.order.dto.request.CreateProductRequest;
 import com.duckpao.order.dto.response.ProductResponse;
 import com.duckpao.order.model.Product;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ProductAdapter {
 
     // DTO -> Model
-    public static Product toModel(CreateProductRequest dto) {
+    public Product toModel(CreateProductRequest dto) {
         return Product.builder()
                 .name(dto.getName())
                 .price(dto.getPrice())
@@ -18,7 +20,7 @@ public class ProductAdapter {
     }
 
     // Model -> DTO
-    public static ProductResponse toResponse(Product product) {
+    public ProductResponse toResponse(Product product) {
         return ProductResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
