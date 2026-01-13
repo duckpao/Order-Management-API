@@ -10,14 +10,12 @@ import java.math.BigDecimal;
 
 @Component
 public class OrderAdapter {
-
     public Order toModel(User user) {
         return Order.builder()
                 .user(user)
                 .totalAmount(BigDecimal.ZERO)
                 .status(OrderStatus.NEW)
                 .build();
-
     }
 
 
