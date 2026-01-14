@@ -6,6 +6,8 @@ import com.duckpao.order.dto.response.UserResponse;
 import com.duckpao.order.model.User;
 import com.duckpao.order.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,23 +22,27 @@ public class UserController {
 
     // ✅ POST /api/users
     @PostMapping
-    public UserResponse createUser(@RequestBody CreateUserRequest request) {
-        return userService.create(request);
+    public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequest request) {
+        UserResponse response = userService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // ✅ GET /api/users
     @GetMapping
-    public List<UserResponse> getAllUsers() {
-        return userService.getAllUsers()
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        List<UserResponse> response = userService.getAllUsers()
                 .stream()
                 .map(userAdapter::toResponse)
                 .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
+
 
     // ✅ GET /api/users/{id}
     @GetMapping("/{id}")
-    public UserResponse getUser(@PathVariable Long id) {
+    public ResponseEntity<UserResponse> getUser(@PathVariable Long id) {
         User user = userService.getById(id);
-        return userAdapter.toResponse(user);
+        UserResponse response = userAdapter.toResponse(user);
+        return ResponseEntity.ok(response);
     }
 }

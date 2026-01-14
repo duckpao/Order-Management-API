@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import com.duckpao.order.exception.BusinessException;
+
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -31,7 +32,6 @@ public class UserService {
     }
 
     public User getById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("User not found"));
+        return userRepository.findById(id).orElseThrow(() -> new BusinessException("User not found"));
     }
 }

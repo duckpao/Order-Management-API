@@ -27,7 +27,9 @@ public class ProductService {
     }
 
     // GET ALL
-  public List<Product> getProducts() {return productRepository.findAll();}
+  public List<Product> getProducts() {
+        return productRepository.findAll();
+    }
     // UPDATE STOCK
     public ProductResponse updateStock(Long id, UpdateStockRequest request) {
         Product product = productRepository.findById(id)
