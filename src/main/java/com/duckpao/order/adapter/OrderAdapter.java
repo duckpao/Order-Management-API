@@ -1,5 +1,4 @@
 package com.duckpao.order.adapter;
-
 import com.duckpao.order.common.OrderStatus;
 import com.duckpao.order.dto.response.OrderResponse;
 import com.duckpao.order.model.Order;
@@ -17,7 +16,6 @@ public class OrderAdapter {
                 .status(OrderStatus.NEW)
                 .build();
     }
-
 
     public OrderResponse toResponse(Order order) {
         return OrderResponse.builder()

@@ -1,8 +1,4 @@
 package com.duckpao.order.exception;
-
-
-import com.duckpao.order.common.ProductStatus;
-import jakarta.persistence.PrePersist;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

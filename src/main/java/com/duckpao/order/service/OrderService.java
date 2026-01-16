@@ -34,7 +34,7 @@ public class OrderService {
         //validate user through domain
         orderDomainService.validateUser(user);
 
-        Order order = orderRepository.save(Order.builder().user(user).status(OrderStatus.NEW).totalAmount(BigDecimal.ZERO).build());
+        Order order = orderRepository.save(orderAdapter.toModel(user));
 
         BigDecimal totalAmount = request.getItems().stream().map(item -> processSingleItem(order, item)).reduce(BigDecimal.ZERO, BigDecimal::add);
 

@@ -10,13 +10,4 @@ public class CreateOrderRequest {
     private Long userId;
     private List<OrderItemRequest> items;
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public List<OrderItemRequest> getItems() {
-        return items;
-    }
-
-
 }
