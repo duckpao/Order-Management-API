@@ -76,13 +76,10 @@ public class OrderService {
         Product product = productRepository.findByIdForUpdate(item.getProductId()).orElseThrow(() -> BusinessException.badRequest("PRODUCT_NOT_FOUND", "Product with id " + item.getProductId() + " not found"));
 //Validate Product
         productDomainService.validateProduct(product, item.getQuantity());
-
         BigDecimal itemTotal = orderDomainService.calculateItemTotal(product, item.getQuantity());
-
         orderItemRepository.save(OrderItem.builder().order(order).product(product).quantity(item.getQuantity()).price(product.getPrice()).build());
 //Decrease Stock
         orderDomainService.decreaseStock(product, item.getQuantity());
-
         return itemTotal;
     }
 

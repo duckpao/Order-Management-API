@@ -40,6 +40,8 @@ public class UserService {
 
     public User getById(Long id) {
         log.info("Retrieving user with id " + id);
-        return userRepository.findById(id).orElseThrow(() -> BusinessException.badRequest("User not found","User not found with id=" + id));
+        return userRepository.findById(id).orElseThrow(() -> { log.error("User with id " + id + " not found");
+            return BusinessException.badRequest("User not found","User not found with id=" + id);
+        });
     }
 }

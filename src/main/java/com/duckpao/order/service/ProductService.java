@@ -75,7 +75,7 @@ public class ProductService {
 
         // Save lại DB
         productRepository.save(product);
-
+log.info("Updated stock for product={}", product);
         return productAdapter.toResponse(product);
     }
 
