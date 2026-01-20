@@ -8,6 +8,7 @@ import java.util.List;
 public class CreateOrderRequest {
 
     private Long userId;
+    private Long productId;
     private List<OrderItemRequest> items;
 
 }

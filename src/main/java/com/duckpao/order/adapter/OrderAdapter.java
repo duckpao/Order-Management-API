@@ -19,6 +19,7 @@ public class OrderAdapter {
 
     public OrderResponse toResponse(Order order) {
         return OrderResponse.builder()
+                .id(order.getId())
                 .userId(order.getUser().getId())
                 .totalAmount(order.getTotalAmount())
                 .status(order.getStatus().name())

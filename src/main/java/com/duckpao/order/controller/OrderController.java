@@ -6,13 +6,14 @@ import com.duckpao.order.model.Order;
 import com.duckpao.order.service.OrderService;
 import com.duckpao.order.adapter.OrderAdapter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
+@Log4j2
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/orders")
@@ -27,6 +28,7 @@ public class OrderController {
                 .stream()
                 .map(orderAdapter::toResponse)
                 .collect(Collectors.toList());
+        log.info("getAllOrders: " + orders);
         return ResponseEntity.ok(orders);
     }
 //post /api/orders
