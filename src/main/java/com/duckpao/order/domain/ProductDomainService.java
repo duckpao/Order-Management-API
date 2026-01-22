@@ -20,7 +20,7 @@ public class ProductDomainService {
         }
         if (product.getStock() < quantity) {
             log.error("Product stock is not enough");
-            throw  BusinessException.conflict("PRODUCT_OUT_OF_STOCK","Product is not available");
+            throw  BusinessException.conflict("PRODUCT_OUT_OF_STOCK","Product " + product.getId() +" is not available");
         }
         log.debug("Processing productId={}, quantity={}", product.getId(), product.getStock());
     }

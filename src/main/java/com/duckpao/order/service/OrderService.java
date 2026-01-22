@@ -1,6 +1,7 @@
 package com.duckpao.order.service;
 
 import com.duckpao.order.adapter.OrderAdapter;
+import com.duckpao.order.common.OrderStatus;
 import com.duckpao.order.domain.OrderDomainService;
 import com.duckpao.order.domain.ProductDomainService;
 import com.duckpao.order.dto.request.CreateOrderRequest;
@@ -59,17 +60,21 @@ public class OrderService {
     }
 
     @Transactional
-    public void deleteOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() ->
-        {
-            log.error("Order not found for orderId={}", orderId);
-            return BusinessException.badRequest("ORDER_NOT_FOUND", "Order with id " + orderId + " not found");
-        });
-        orderItemRepository.deleteByOrder(order);
-        log.info("Order deleted successfully");
-        orderRepository.delete(order);
+    public boolean deleteOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElse(null);
+        if (order == null) {
+            return false;
+        }
 
+        if (order.getStatus() == OrderStatus.PAID) {
+            throw  BusinessException.conflict("DELETE_IS_PAID", "Order with id " + orderId + " is paid");
+        }
+
+        orderItemRepository.deleteByOrder(order);
+        orderRepository.delete(order);
+        return true;
     }
+
 
     private BigDecimal processSingleItem(Order order, OrderItemRequest item) {
 //Xu ly khi co 2 don hang dat cung luc
