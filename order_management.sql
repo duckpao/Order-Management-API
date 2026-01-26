@@ -157,3 +157,13 @@ INSERT INTO product_category (product_id, category_id) VALUES
 
 
 
+CREATE TABLE api_logs (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    method VARCHAR(10),
+    path VARCHAR(255),
+    request_body LONGTEXT,
+    response_body LONGTEXT,
+    status INT,
+    execution_time_ms BIGINT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
