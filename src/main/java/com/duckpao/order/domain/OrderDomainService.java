@@ -13,7 +13,7 @@ public class OrderDomainService {
 
     public void validateUser(User user) {
         if (user.getStatus() != UserStatus.ACTIVE) {
-            throw BusinessException.badRequest("USER_NOT_AVAILABLE", "User is not active with id " + user.getId());
+            throw BusinessException.conflict("USER_NOT_AVAILABLE", "User is not active with id " + user.getId());
         }
     }
 

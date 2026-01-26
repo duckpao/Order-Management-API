@@ -4,13 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-
 @Entity
-@Table(name = "api_logs")
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(name = "api_log")
+@Getter @Setter @Builder
+@NoArgsConstructor @AllArgsConstructor
 public class ApiLog {
 
     @Id
@@ -20,14 +17,13 @@ public class ApiLog {
     private String method;
     private String path;
 
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "TEXT")
     private String requestBody;
 
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "TEXT")
     private String responseBody;
 
     private Integer status;
-    private Long executionTimeMs;
 
     private LocalDateTime createdAt;
 }
